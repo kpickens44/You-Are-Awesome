@@ -14,7 +14,9 @@ class ViewController: UIViewController {
     
     var imageNumber = -1
     var msgNumber = -1
+    var soundNumber = -1
     let totalNumberOfImages = 9
+    let totalNumberOfSounds = 9
     var audioPlayer: AVAudioPlayer!
     
     
@@ -23,8 +25,8 @@ class ViewController: UIViewController {
         
     }
     
-    func playSound() {
-        if let sound = NSDataAsset(name: "sound0"){
+    func playSound(name: String) {
+        if let sound = NSDataAsset(name: name){
             do {
                 try audioPlayer = AVAudioPlayer(data: sound.data)
                 audioPlayer.play()
@@ -36,6 +38,13 @@ class ViewController: UIViewController {
         }
     }
 
+    func nonRepeatingRandom(originalNumber: Int, upperLimit: Int) -> Int {
+        var newNumber: Int
+        repeat {
+            newNumber = Int.random(in: 0...upperLimit)
+        } while originalNumber == newNumber
+        return newNumber
+    }
     
     @IBAction func msgButtonPressed(_ sender: UIButton) {
         let messages = ["You Are Awesome!",
@@ -45,21 +54,14 @@ class ViewController: UIViewController {
                         "Fabulous? That's You!",
                         "You've Got The Design Skills of Jony Ive"]
       
-        var newMessageNumber: Int
-        repeat {
-            newMessageNumber = Int.random(in: 0...messages.count-1)
-        } while msgNumber == newMessageNumber
-        msgNumber = newMessageNumber
+        msgNumber = nonRepeatingRandom(originalNumber: msgNumber, upperLimit: messages.count-1)
         msgLabel.text = messages[msgNumber]
         
-        var newImageNumber: Int
-        repeat {
-            newImageNumber = Int.random(in: 0...totalNumberOfImages)
-        } while imageNumber == newImageNumber
-        imageNumber = newImageNumber
+        imageNumber = nonRepeatingRandom(originalNumber: imageNumber, upperLimit: totalNumberOfSounds-1)
         imageView.image = UIImage(named: "image\(imageNumber)")
 
-        playSound()
+        soundNumber = nonRepeatingRandom(originalNumber: soundNumber, upperLimit: totalNumberOfSounds-1)
+        playSound(name: "sound\(soundNumber)")
     }
 }
 
